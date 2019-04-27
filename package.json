@@ -1,0 +1,29 @@
+{
+  "name": "dex-burgers",
+  "version": "0.0.1",
+  "description": "A server for the food shop project created for Dextra interview process",
+  "main": "index.js",
+  "keywords": [
+    "dextra",
+    "food",
+    "shop",
+    "react"
+  ],
+  "author": "Fabio Valonga",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "clone": "^2.1.1",
+    "cors": "^2.8.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^6.1.4"
+  },
+  "scripts": {
+    "test": "mocha --exit"
+  }
+}
