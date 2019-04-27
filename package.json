@@ -21,9 +21,12 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.1.4"
+    "coveralls": "^3.0.3",
+    "mocha": "^6.1.4",
+    "nyc": "^14.0.0"
   },
   "scripts": {
-    "test": "mocha --exit"
+    "test": "nyc mocha --exit",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   }
 }
