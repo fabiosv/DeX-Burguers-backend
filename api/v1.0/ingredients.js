@@ -3,6 +3,7 @@ const ingredients_controller = require('../../controllers/ingredients_controller
 
 router.get('/', ingredients_controller.getAll)
 router.post('/', ingredients_controller.create)
+router.put('/', ingredients_controller.update)
 // router.post('/', (req, res, next) => {
 //   const ingredients = require('../../data/preData').ingredients
 

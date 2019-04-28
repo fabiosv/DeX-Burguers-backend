@@ -30,4 +30,22 @@ exports.update = (req, res, next) => {
   if(verifyParams(ingredient)) {
     return res.status(400).send("Neither name or price was informed!")
   }
+
+  if(ingredient.name in ingredients) {
+    ingredients[ingredient.name] = ingredient.price
+    return res.status(204).end()
+  }
+
+  return res.status(404).send("Ingredient Not Found")
+}
+
+exports.delete = (req, res, next) => {
+  const ingredient = req.body
+
+  if(typeof(ingredient.name) !== "undefined" && ingredient.name in ingredients){
+    delete ingredients[ingredient.name]
+    return res.send("Ingredient Deleted!")
+  }
+
+  return res.status(404).send("Ingredient not found")
 }
