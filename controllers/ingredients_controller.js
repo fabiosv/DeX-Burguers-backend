@@ -47,12 +47,11 @@ exports.update = (req, res, next) => {
     return res.status(400).send("Price must be higher than zero!")
   }
 
-  if(ingredient.name in ingredients) {
-    ingredients[ingredient.name] = ingredient.price
-    return res.status(204).end()
+  if(!(ingredient.name in ingredients)) {
+    return res.status(404).send("Ingredient Not Found!")
   }
-
-  return res.status(404).send("Ingredient Not Found!")
+  ingredients[ingredient.name] = ingredient.price
+  return res.status(204).end()
 }
 
 exports.delete = (req, res, next) => {
