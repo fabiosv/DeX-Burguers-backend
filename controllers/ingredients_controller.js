@@ -15,6 +15,14 @@ exports.create = (req, res, next) => {
     return res.status(400).send("Neither name or price was informed!")
   }
 
+  if(typeof(newIngredient.price) !== "number"){
+    return res.status(400).send("Price must be a number!")
+  }
+
+  if(newIngredient.price <= 0) {
+    return res.status(400).send("Price must be higher than zero!")
+  }
+
   if(newIngredient.name in ingredients){
     return res.status(409).send("Ingredient already exists!")
   }
@@ -31,12 +39,20 @@ exports.update = (req, res, next) => {
     return res.status(400).send("Neither name or price was informed!")
   }
 
+  if(typeof(ingredient.price) !== "number"){
+    return res.status(400).send("Price must be a number!")
+  }
+
+  if(ingredient.price <= 0) {
+    return res.status(400).send("Price must be higher than zero!")
+  }
+
   if(ingredient.name in ingredients) {
     ingredients[ingredient.name] = ingredient.price
     return res.status(204).end()
   }
 
-  return res.status(404).send("Ingredient Not Found")
+  return res.status(404).send("Ingredient Not Found!")
 }
 
 exports.delete = (req, res, next) => {
@@ -47,5 +63,5 @@ exports.delete = (req, res, next) => {
     return res.send("Ingredient Deleted!")
   }
 
-  return res.status(404).send("Ingredient not found")
+  return res.status(404).send("Ingredient Not Found!")
 }
