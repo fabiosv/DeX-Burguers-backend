@@ -2,6 +2,8 @@ const server = require('../server')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const should = chai.should()
+const validatePost = require('../helpers/validation_methods').validatePost
+const validatePut = require('../helpers/validation_methods').validatePut
 
 chai.use(chaiHttp)
 
@@ -188,27 +190,3 @@ describe('API v1.0 Ingredients', function(){
   })
 
 })
-
-const validatePost = (status, msg, ingredient) => {
-  chai.request(server)
-  .post('/api/v1.0/ingredients')
-  .set('Authorization', 'some_value')
-  .send(ingredient)
-  .end((err, res) => {
-    res.should.have.status(status)
-    res.text.should.be.a('string')
-    res.text.should.equal(msg)
-  })
-}
-
-const validatePut = (status, msg, ingredient) => {
-  chai.request(server)
-  .put('/api/v1.0/ingredients')
-  .set('Authorization', 'some_value')
-  .send(ingredient)
-  .end((err, res) => {
-    res.should.have.status(status)
-    res.text.should.be.a('string')
-    res.text.should.equal(msg)
-  })
-}
