@@ -6,7 +6,7 @@ exports.ingredients = {
   "Queijo": 1.50,
 }
 
-exports.sandwiches = {
+exports.burgers_menu = {
   "X-Bacon":	["Bacon", "Hambúrguer de carne", "Queijo"],
   "X-Burger":	["Hambúrguer de carne", "Queijo"],
   "X-Egg":	["Ovo", "Hambúrguer de carne", "Queijo"],
