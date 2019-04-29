@@ -5,12 +5,14 @@ const should = chai.should()
 const validatePost = require('../helpers/validation_methods').validatePost
 const validatePut = require('../helpers/validation_methods').validatePut
 
+const API = '/api/v1.0/ingredients'
+
 chai.use(chaiHttp)
 
 describe('API v1.0 Ingredients', function(){
   it('/GET/ingredients : verify if basic ingredients are displayed, and prices are numbers', function(done){
     chai.request(server)
-      .get('/api/v1.0/ingredients')
+      .get(API)
       .set('Authorization', 'some_value')
       .end((err, res) => {
         const basicIngredients = ['Alface', 'Bacon', 'Hambúrguer de carne', 'Ovo', 'Queijo']
@@ -31,7 +33,7 @@ describe('API v1.0 Ingredients', function(){
       price: 0.10
     }
     chai.request(server)
-      .post('/api/v1.0/ingredients')
+      .post(API)
       .set('Authorization', 'some_value')
       .send(ingredient)
       .end((err, res) => {
@@ -44,7 +46,7 @@ describe('API v1.0 Ingredients', function(){
 
   it('/GET/ingredients : verify if "Tomate" was added to ingredients list', function(done){
     chai.request(server)
-      .get('/api/v1.0/ingredients')
+      .get(API)
       .set('Authorization', 'some_value')
       .end((err, res) => {
         const basicIngredients = ['Alface', 'Bacon', 'Hambúrguer de carne', 'Ovo', 'Queijo', 'Tomate']
@@ -60,25 +62,25 @@ describe('API v1.0 Ingredients', function(){
   })
 
   it('/POST/ingredients : try to create ingredient without inform name or price, should display 400 - "Neither name or price was informed!"', function(done){
-    validatePost(400, 'Neither name or price was informed!', {})
-    validatePost(400, 'Neither name or price was informed!', {name:"Tomate"})
-    validatePost(400, 'Neither name or price was informed!', {price:0.50})
+    validatePost(API, 400, 'Neither name or price was informed!', {})
+    validatePost(API, 400, 'Neither name or price was informed!', {name:"Tomate"})
+    validatePost(API, 400, 'Neither name or price was informed!', {price:0.50})
 
     done()
   })
 
   it('/POST/ingredients : try to create ingredient with price different of number, should display 400 - "Price must be a number!"', function(done){
-    validatePost(400, 'Price must be a number!', {name:"Tomate", price: "0.50"})
-    validatePost(400, 'Price must be a number!', {name:"Tomate", price: ""})
-    validatePost(400, 'Price must be a number!', {name:"Tomate", price: true})
-    validatePost(400, 'Price must be a number!', {name:"Tomate", price: [0.25]})
+    validatePost(API, 400, 'Price must be a number!', {name:"Tomate", price: "0.50"})
+    validatePost(API, 400, 'Price must be a number!', {name:"Tomate", price: ""})
+    validatePost(API, 400, 'Price must be a number!', {name:"Tomate", price: true})
+    validatePost(API, 400, 'Price must be a number!', {name:"Tomate", price: [0.25]})
 
     done()
   })
 
   it('/POST/ingredients : try to create ingredient with price equal or less than zero, should display 400 - "Price must be higher than zero!"', function(done){
-    validatePost(400, 'Price must be higher than zero!', {name:"Tomate", price: -204})
-    validatePost(400, 'Price must be higher than zero!', {name:"Tomate", price: 0})
+    validatePost(API, 400, 'Price must be higher than zero!', {name:"Tomate", price: -204})
+    validatePost(API, 400, 'Price must be higher than zero!', {name:"Tomate", price: 0})
 
     done()
   })
@@ -89,7 +91,7 @@ describe('API v1.0 Ingredients', function(){
       price: 0.10
     }
     chai.request(server)
-      .post('/api/v1.0/ingredients')
+      .post(API)
       .set('Authorization', 'some_value')
       .send(ingredient)
       .end((err, res) => {
@@ -106,14 +108,14 @@ describe('API v1.0 Ingredients', function(){
       price: 1.25
     }
     chai.request(server)
-      .put('/api/v1.0/ingredients')
+      .put(API)
       .set('Authorization', 'some_value')
       .send(ingredient)
       .end((err, res) => {
         res.should.have.status(204)
 
         chai.request(server)
-        .get('/api/v1.0/ingredients')
+        .get(API)
         .set('Authorization', 'some_value')
         .end((err, res) => {
           res.should.have.status(200)
@@ -124,31 +126,31 @@ describe('API v1.0 Ingredients', function(){
   })
 
   it('/PUT/ingredients : try to update ingredient without inform name or price, should display 400 - "Neither name or price was informed!"', function(done){
-    validatePut(400, 'Neither name or price was informed!', {})
-    validatePut(400, 'Neither name or price was informed!', {name:"Tomate"})
-    validatePut(400, 'Neither name or price was informed!', {price:0.50})
+    validatePut(API, 400, 'Neither name or price was informed!', {})
+    validatePut(API, 400, 'Neither name or price was informed!', {name:"Tomate"})
+    validatePut(API, 400, 'Neither name or price was informed!', {price:0.50})
 
     done()
   })
 
   it('/PUT/ingredients : try to update ingredient with price different of number, should display 400 - "Price must be a number!"', function(done){
-    validatePut(400, 'Price must be a number!', {name:"Tomate", price: "0.50"})
-    validatePut(400, 'Price must be a number!', {name:"Tomate", price: ""})
-    validatePut(400, 'Price must be a number!', {name:"Tomate", price: true})
-    validatePut(400, 'Price must be a number!', {name:"Tomate", price: [0.25]})
+    validatePut(API, 400, 'Price must be a number!', {name:"Tomate", price: "0.50"})
+    validatePut(API, 400, 'Price must be a number!', {name:"Tomate", price: ""})
+    validatePut(API, 400, 'Price must be a number!', {name:"Tomate", price: true})
+    validatePut(API, 400, 'Price must be a number!', {name:"Tomate", price: [0.25]})
 
     done()
   })
 
   it('/PUT/ingredients : try to update ingredient with price equal or less than zero, should display 400 - "Price must be higher than zero!"', function(done){
-    validatePut(400, 'Price must be higher than zero!', {name:"Tomate", price: -204})
-    validatePut(400, 'Price must be higher than zero!', {name:"Tomate", price: 0})
+    validatePut(API, 400, 'Price must be higher than zero!', {name:"Tomate", price: -204})
+    validatePut(API, 400, 'Price must be higher than zero!', {name:"Tomate", price: 0})
 
     done()
   })
 
   it('/PUT/ingredients : try to update ingredient that not exist, should display 404 - "Ingredient Not Found!"', function(done){
-    validatePut(404, 'Ingredient Not Found!', {name:"Salame", price: 2.5})
+    validatePut(API, 404, 'Ingredient Not Found!', {name:"Salame", price: 2.5})
 
     done()
   })
@@ -159,7 +161,7 @@ describe('API v1.0 Ingredients', function(){
     }
 
     chai.request(server)
-    .delete('/api/v1.0/ingredients')
+    .delete(API)
     .set('Authorization', 'some_value')
     .send(ingredient)
     .end((err, res) => {
@@ -177,7 +179,7 @@ describe('API v1.0 Ingredients', function(){
     }
 
     chai.request(server)
-    .delete('/api/v1.0/ingredients')
+    .delete(API)
     .set('Authorization', 'some_value')
     .send(ingredient)
     .end((err, res) => {

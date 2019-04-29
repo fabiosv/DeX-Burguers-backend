@@ -5,11 +5,11 @@ const should = chai.should()
 
 chai.use(chaiHttp)
 
-exports.validatePost = (status, msg, ingredient) => {
+exports.validatePost = (api, status, msg, data) => {
   chai.request(server)
-  .post('/api/v1.0/ingredients')
+  .post(api)
   .set('Authorization', 'some_value')
-  .send(ingredient)
+  .send(data)
   .end((err, res) => {
     res.should.have.status(status)
     res.text.should.be.a('string')
@@ -17,11 +17,11 @@ exports.validatePost = (status, msg, ingredient) => {
   })
 }
 
-exports.validatePut = (status, msg, ingredient) => {
+exports.validatePut = (api, status, msg, data) => {
   chai.request(server)
-  .put('/api/v1.0/ingredients')
+  .put(api)
   .set('Authorization', 'some_value')
-  .send(ingredient)
+  .send(data)
   .end((err, res) => {
     res.should.have.status(status)
     res.text.should.be.a('string')
