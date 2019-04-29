@@ -12,3 +12,9 @@ exports.burgers_menu = {
   "X-Egg":	["Ovo", "Hambúrguer de carne", "Queijo"],
   "X-Egg Bacon":	["Ovo", "Bacon", "Hambúrguer de carne", "Queijo"],
 }
+
+exports.promotions = {
+  "Light": {type: "discount", have: "Alface", not_have: "Bacon", discount: 0.1},
+  "Muita carne": {type: "quantity", have: {condition: "each", quantity: 3, ingredient: "Hambúrguer de carne"}, charge: 2},
+  "Muito queijo": {type: "quantity", have: {condition: "each", quantity: 3, ingredient: "Queijo"}, charge: 2}
+}
