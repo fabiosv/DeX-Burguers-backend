@@ -6,7 +6,7 @@ exports.authorization = (req, res, next) => {
     next()
   } else {
     res.status(403).send({
-      error: 'Please provide an Authorization header to identify yourself (can be whatever you want)'
+      error: 'Please provide an Authorization header to identify yourself'
     })
   }
 }

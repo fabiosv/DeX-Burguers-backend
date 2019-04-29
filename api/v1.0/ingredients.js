@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const ingredients_controller = require('../../controllers/ingredients_controller')
+const ingredients_controller = require('../../controllers/v1.0/ingredients_controller')
 
 router.get('/', ingredients_controller.getAll)
 router.post('/', ingredients_controller.create)
