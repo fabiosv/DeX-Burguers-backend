@@ -1,4 +1,4 @@
-const ingredients = require('../data/preData').ingredients
+const ingredients = require('../../data/preData').ingredients
 
 const verifyParams = (ingredient) => {
   return typeof(ingredient.name) === "undefined" || typeof(ingredient.price) === "undefined"
@@ -57,7 +57,7 @@ exports.update = (req, res, next) => {
 exports.delete = (req, res, next) => {
   const ingredient = req.body
 
-  if(typeof(ingredient.name) !== "undefined" && ingredient.name in ingredients){
+  if(typeof(ingredient.name) === "string" && ingredient.name in ingredients){
     delete ingredients[ingredient.name]
     return res.send("Ingredient Deleted!")
   }

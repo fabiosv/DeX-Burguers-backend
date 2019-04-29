@@ -1,8 +1,8 @@
-const burgers_menu = require('../data/preData').burgers_menu
-const ingredients = require('../data/preData').ingredients
+const burgers_menu = require('../../data/preData').burgers_menu
+const ingredients = require('../../data/preData').ingredients
 
 const paramsOK = (burger) => {
-  return typeof(burger.name) === "string" && typeof(burger.ingredients) === "array"
+  return typeof(burger.name) === "string" && Array.isArray(burger.ingredients)
 }
 
 exports.getAll = (req, res, next) => {
@@ -15,7 +15,13 @@ exports.create = (req, res, next) => {
   if(!paramsOK(newBurger)){
     return res.status(400).send("Neither name or ingredients was correct! Name must be a string and ingredients an array.")
   }
-  res.status(201).send("Ingredient created Successfully: \n" + JSON.stringify(newIngredient))
+
+  if(newBurger.name in burgers_menu){
+    return res.status(409).send("Burger already exists!")
+  }
+
+  burgers_menu[newBurger.name] = newBurger.ingredients
+  res.status(201).send("Burger created Successfully: \n" + JSON.stringify(newBurger))
 }
 
 exports.update = (req, res, next) => {
