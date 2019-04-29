@@ -115,13 +115,13 @@ describe('API v1.0 Ingredients', function(){
         res.should.have.status(204)
 
         chai.request(server)
-        .get(API)
-        .set('Authorization', 'some_value')
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body['Tomate'].should.equal(1.25)
-          done()
-        })
+          .get(API)
+          .set('Authorization', 'some_value')
+          .end((err, res) => {
+            res.should.have.status(200)
+            res.body['Tomate'].should.equal(1.25)
+            done()
+          })
       })
   })
 
@@ -161,14 +161,14 @@ describe('API v1.0 Ingredients', function(){
     }
 
     chai.request(server)
-    .delete(API)
-    .set('Authorization', 'some_value')
-    .send(ingredient)
-    .end((err, res) => {
-      res.should.have.status(200)
-      res.text.should.be.a('string')
-      res.text.should.equal("Ingredient Deleted!")
-    })
+      .delete(API)
+      .set('Authorization', 'some_value')
+      .send(ingredient)
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.text.should.be.a('string')
+        res.text.should.equal("Ingredient Deleted!")
+      })
 
     done()
   })
@@ -179,14 +179,14 @@ describe('API v1.0 Ingredients', function(){
     }
 
     chai.request(server)
-    .delete(API)
-    .set('Authorization', 'some_value')
-    .send(ingredient)
-    .end((err, res) => {
-      res.should.have.status(404)
-      res.text.should.be.a('string')
-      res.text.should.equal("Ingredient Not Found!")
-    })
+      .delete(API)
+      .set('Authorization', 'some_value')
+      .send(ingredient)
+      .end((err, res) => {
+        res.should.have.status(404)
+        res.text.should.be.a('string')
+        res.text.should.equal("Ingredient Not Found!")
+      })
 
     done()
   })

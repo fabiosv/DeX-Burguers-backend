@@ -42,10 +42,14 @@ exports.update = (req, res, next) => {
 exports.delete = (req, res, next) => {
   const burger = req.body
 
-  if(burger.name in ingredients){
+  if(typeof(burger.name) !== "string"){
+    return res.status(400).send("Please inform a name param! It must be a string")
+  }
+
+  if(burger.name in burgers_menu){
     delete burgers_menu[burger.name]
     return res.send("Burger Deleted!")
   }
 
-  return res.status(404).send("Ingredient Not Found!")
+  return res.status(404).send("Burger Not Found!")
 }

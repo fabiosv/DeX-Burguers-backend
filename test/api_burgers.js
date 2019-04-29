@@ -104,35 +104,17 @@ describe('API v1.0 Burgers', function(){
     done()
   })
 
-  it('/PUT/burgers : create new burger called "X-Test" adding "Bacon", should display 204', function(done){
+  it('/POST/burgers : try to create burger "X-Bacon" that already exists, should display 409 - "Burger already exists!"', function(done){
     let burger = {
-      name: "X-Test",
-      ingredients: ["Ovo", "Hambúrguer de carne", "Bacon"]
+      name: 'X-Bacon',
+      ingredients: ["Ovo", "Hambúrguer de carne"]
     }
-    chai.request(server)
-      .put(API)
-      .set('Authorization', 'some_value')
-      .send(burger)
-      .end((err, res) => {
-        res.should.have.status(204)
+    validatePost(API, 409, "Burger already exists!", burger)
 
-        chai.request(server)
-        .get(API)
-        .set('Authorization', 'some_value')
-        .end((err, res) => {
-          const burgers = [ 'X-Bacon', 'X-Burger', 'X-Egg', 'X-Egg Bacon', 'X-Test' ]
-          res.should.have.status(200)
-          res.body.should.be.a('object')
-          Object.keys(res.body).should.have.lengthOf(5)
-          chai.expect(res.body).to.include.all.keys(burgers)
-          chai.expect(res.body['X-Test']).to.includes("Bacon", "Ovo", "Hambúrguer de carne")
-          res.body['X-Test'].should.have.lengthOf(3)
-        })
-      })
     done()
   })
 
-  it('/POST/ingredients : try to create burger and validade params, should display 400 - "Neither name or ingredients was correct! Name must be a string and ingredients an array."', function(done){
+  it('/POST/burgers : try to create burger and validade params, should display 400 - "Neither name or ingredients was correct! Name must be a string and ingredients an array."', function(done){
     const errmsg = "Neither name or ingredients was correct! Name must be a string and ingredients an array."
     validatePost(API, 400, errmsg, {})
     validatePost(API, 400, errmsg, {name:"X-Fish"})
@@ -146,12 +128,40 @@ describe('API v1.0 Burgers', function(){
     done()
   })
 
-  it('/PUT/ingredients : try to update "X-Test" that not exist, should display 404 - "Burger Not Found!"', function(done){
+  it('/PUT/burgers : create new burger called "X-Test" adding "Bacon", should display 204', function(done){
+    let burger = {
+      name: "X-Test",
+      ingredients: ["Ovo", "Hambúrguer de carne", "Bacon"]
+    }
+    chai.request(server)
+      .put(API)
+      .set('Authorization', 'some_value')
+      .send(burger)
+      .end((err, res) => {
+        res.should.have.status(204)
+
+        chai.request(server)
+          .get(API)
+          .set('Authorization', 'some_value')
+          .end((err, res) => {
+            const burgers = [ 'X-Bacon', 'X-Burger', 'X-Egg', 'X-Egg Bacon', 'X-Test' ]
+            res.should.have.status(200)
+            res.body.should.be.a('object')
+            Object.keys(res.body).should.have.lengthOf(5)
+            chai.expect(res.body).to.include.all.keys(burgers)
+            chai.expect(res.body['X-Test']).to.includes("Bacon", "Ovo", "Hambúrguer de carne")
+            res.body['X-Test'].should.have.lengthOf(3)
+          })
+      })
+    done()
+  })
+
+  it('/PUT/burgers : try to update burger that not exist, should display 404 - "Burger Not Found!"', function(done){
     validatePut(API, 404, "Burger Not Found!", {name: "X-Pecial", ingredients: []})
     done()
   })
 
-  it('/PUT/ingredients : try to update burger "X-Test" and validate params, should display 400 - "Neither name or ingredients was correct! Name must be a string and ingredients an array."', function(done){
+  it('/PUT/burgers : try to update burger "X-Test" and validate params, should display 400 - "Neither name or ingredients was correct! Name must be a string and ingredients an array."', function(done){
     const errmsg = "Neither name or ingredients was correct! Name must be a string and ingredients an array."
     validatePut(API, 400, errmsg, {})
     validatePut(API, 400, errmsg, {name:"X-Test"})
@@ -165,8 +175,71 @@ describe('API v1.0 Burgers', function(){
     done()
   })
 
-  it('/PUT/ingredients : try to update burger that not exist, should display 404 - "Burger Not Found!"', function(done){
+  it('/PUT/burgers : try to update burger that not exist, should display 404 - "Burger Not Found!"', function(done){
     validatePut(API, 404, "Burger Not Found!", {name: "X-Pecial", ingredients: []})
+    done()
+  })
+
+  it('/DELETE/burgers : try to delete burger and check if others burgers still there, should display 200 - "Burger Deleted!"', function(done){
+    let burger = {
+      name: "X-Test"
+    }
+
+    chai.request(server)
+      .delete(API)
+      .set('Authorization', 'some_value')
+      .send(burger)
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.text.should.be.a('string')
+        res.text.should.equal("Burger Deleted!")
+      })
+
+    chai.request(server)
+      .get(API)
+      .set('Authorization', 'some_value')
+      .end((err, res) => {
+        const burgers = [ 'X-Bacon', 'X-Burger', 'X-Egg', 'X-Egg Bacon' ]
+        res.should.have.status(200)
+        res.body.should.be.a('object')
+        Object.keys(res.body).should.have.lengthOf(4);
+        chai.expect(res.body).to.include.all.keys(burgers)
+      })
+
+    done()
+  })
+
+  it('/DELETE/burgers : try to delete burger "X-Test" again, should display 404 - "Burger Not Found!"', function(done){
+    let burger = {
+      name: "X-Test"
+    }
+
+    chai.request(server)
+      .delete(API)
+      .set('Authorization', 'some_value')
+      .send(burger)
+      .end((err, res) => {
+        res.should.have.status(404)
+        res.text.should.be.a('string')
+        res.text.should.equal("Burger Not Found!")
+      })
+
+    done()
+  })
+
+  it('/DELETE/burgers : try to delete burger without inform any params, should display 400 - "Please inform a name param! It must be a string"', function(done){
+    let burger = {}
+
+    chai.request(server)
+      .delete(API)
+      .set('Authorization', 'some_value')
+      .send(burger)
+      .end((err, res) => {
+        res.should.have.status(400)
+        res.text.should.be.a('string')
+        res.text.should.equal("Please inform a name param! It must be a string")
+      })
+
     done()
   })
 })
