@@ -28,3 +28,21 @@ exports.validatePut = (api, status, msg, data) => {
     res.text.should.equal(msg)
   })
 }
+
+exports.validatePrice = (api, burger, price, promoPrice, promoApplied = []) => {
+  chai.request(server)
+    .post(api)
+    .set('Authorization', 'some_value')
+    .send(burger)
+    .end((err, res) => {
+      res.should.have.status(200)
+      res.body.should.be.a('object')
+      res.body.should.have.property('name').equal(burger.name)
+      res.body.should.have.property('originalPrice').equal(price)
+      res.body.should.have.property('promoPrice').equal(promoPrice)
+      res.body.should.have.property('promotions').with.lengthOf(promoApplied.length)
+      if(promoApplied.length > 0) {
+        chai.expect(res.body.promotions).to.includes(...promoApplied)
+      }
+    })
+}
