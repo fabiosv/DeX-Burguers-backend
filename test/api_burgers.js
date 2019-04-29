@@ -128,7 +128,13 @@ describe('API v1.0 Burgers', function(){
     done()
   })
 
-  it('/PUT/burgers : create new burger called "X-Test" adding "Bacon", should display 204', function(done){
+  it('/POST/burgers : try to create burger with ingredients that not exists, should display 400 - "["Ingredient"] are not valid Ingredient"', function(done){
+    validatePost(API, 400, '[Peixe] are not valid Ingredient', {name: "X-Fish", ingredients: ["Peixe", "Ovo", "Bacon"]})
+
+    done()
+  })
+
+  it('/PUT/burgers : update burger called "X-Test" adding "Bacon", should display 204', function(done){
     let burger = {
       name: "X-Test",
       ingredients: ["Ovo", "Hambúrguer de carne", "Bacon"]
@@ -153,6 +159,12 @@ describe('API v1.0 Burgers', function(){
             res.body['X-Test'].should.have.lengthOf(3)
           })
       })
+    done()
+  })
+
+  it('/PUT/burgers : try to update burger with ingredients that not exists, should display 400 - "["Ingredient"] are not valid Ingredient"', function(done){
+    validatePut(API, 400, '[Peixe,Molho BBQ] are not valid Ingredient', {name: "X-Test", ingredients: ["Peixe", "Molho BBQ", "Ovo", "Bacon"]})
+
     done()
   })
 

@@ -20,6 +20,12 @@ exports.create = (req, res, next) => {
     return res.status(409).send("Burger already exists!")
   }
 
+  let notIngredint = newBurger.ingredients.filter((ing) => !(ing in ingredients))
+
+  if(notIngredint.length > 0) {
+    return res.status(400).send(`[${notIngredint}] are not valid Ingredient`)
+  }
+
   burgers_menu[newBurger.name] = newBurger.ingredients
   res.status(201).send("Burger created Successfully: \n" + JSON.stringify(newBurger))
 }
@@ -33,6 +39,12 @@ exports.update = (req, res, next) => {
 
   if(!(burger.name in burgers_menu)) {
     return res.status(404).send("Burger Not Found!")
+  }
+
+  let notIngredint = burger.ingredients.filter((ing) => !(ing in ingredients))
+
+  if(notIngredint.length > 0) {
+    return res.status(400).send(`[${notIngredint}] are not valid Ingredient`)
   }
 
   burgers_menu[burger.name] = burger.ingredients
