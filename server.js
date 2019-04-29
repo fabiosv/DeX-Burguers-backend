@@ -15,12 +15,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
-  const help = `
-    <pre>
-      Welcome to the Food Shop API!
-    </pre>
-  `
-  res.send(help)
+  res.send(require('./helpers/welcome_api').welcomge_msg)
 })
 
 app.use(require('./secured').authorization)

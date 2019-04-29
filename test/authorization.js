@@ -4,12 +4,24 @@ const chaiHttp = require('chai-http')
 const should = chai.should()
 const validatePost = require('../helpers/validation_methods').validatePost
 const validatePut = require('../helpers/validation_methods').validatePut
+const welcome_msg = require('../helpers/welcome_api').welcomge_msg
 
 chai.use(chaiHttp)
 
 const authorize_msg = "Please provide an Authorization header to identify yourself"
 
 describe('API v1.0 Authorization', function(){
+  it('/GET/ : Verify if welcome page is public', function(done){
+    chai.request(server)
+      .get('/')
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.text.should.be.a('string')
+        res.text.should.equal(welcome_msg)
+      })
+    done()
+  })
+
   it('/GET-POST-PUT-DELETE/burgers : verify if burgers API is under protection, should display 403 - "Please provide an Authorization header to identify yourself"', function(done){
     chai.request(server)
       .get('/api/v1.0/burgers')
