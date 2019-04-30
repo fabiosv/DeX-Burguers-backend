@@ -5,6 +5,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const config = require('./server/config')
+const path = require("path")
+const fs = require("fs")
 
 const app = express()
 
@@ -14,13 +16,18 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
+
 app.get('/', (req, res) => {
-  res.send(require('./helpers/welcome_api').welcomge_msg)
+  return res.send(require('./helpers/welcome_api').welcomge_msg)
 })
 
+app.get('/public', express.static(path.join(__dirname, "./public")))
+
+app.get("/public/images/:name", (req, res) => {
+  return res.sendFile(path.join(__dirname, `./public/images/${req.params.name}`));
+})
 app.use(require('./secured').authorization)
 
-// require('./server/routes')(app)
 app.use('/api', require('./api'))
 
 app.listen(config.port, () => {

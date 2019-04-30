@@ -7,10 +7,22 @@ exports.ingredients = {
 }
 
 exports.burgers_menu = {
-  "X-Bacon":	["Bacon", "Hambúrguer de carne", "Queijo"],
-  "X-Burger":	["Hambúrguer de carne", "Queijo"],
-  "X-Egg":	["Ovo", "Hambúrguer de carne", "Queijo"],
-  "X-Egg Bacon":	["Ovo", "Bacon", "Hambúrguer de carne", "Queijo"],
+  "X-Bacon":	{
+    ingredients: ["Bacon", "Hambúrguer de carne", "Queijo"],
+    image: '/public/images/x-bacon.jpg'
+  },
+  "X-Burger":	{
+    ingredients: ["Hambúrguer de carne", "Queijo"],
+    image: '/public/images/x-burguer.png'
+  },
+  "X-Egg": {
+    ingredients: ["Ovo", "Hambúrguer de carne", "Queijo"],
+    image: '/public/images/x-egg.png'
+  },
+  "X-Egg Bacon": {
+    ingredients: ["Ovo", "Bacon", "Hambúrguer de carne", "Queijo"],
+    image: '/public/images/x-egg-bacon.png'
+  },
 }
 
 exports.promotions = {

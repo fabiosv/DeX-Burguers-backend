@@ -31,8 +31,8 @@ describe('API v1.0 Burgers', function(){
       .get(API)
       .set('Authorization', 'some_value')
       .end((err, res) => {
-        res.body.should.have.property('X-Bacon').with.lengthOf(3)
-        chai.expect(res.body['X-Bacon']).to.includes("Bacon", "Hambúrguer de carne", "Queijo")
+        res.body.should.have.property('X-Bacon').with.property('ingredients').with.lengthOf(3)
+        chai.expect(res.body['X-Bacon'].ingredients).to.includes("Bacon", "Hambúrguer de carne", "Queijo")
 
         done()
       })
@@ -43,8 +43,8 @@ describe('API v1.0 Burgers', function(){
       .get(API)
       .set('Authorization', 'some_value')
       .end((err, res) => {
-        res.body.should.have.property('X-Burger').with.lengthOf(2)
-        chai.expect(res.body['X-Burger']).to.includes("Hambúrguer de carne", "Queijo")
+        res.body.should.have.property('X-Burger').with.property('ingredients').with.lengthOf(2)
+        chai.expect(res.body['X-Burger'].ingredients).to.includes("Hambúrguer de carne", "Queijo")
 
         done()
       })
@@ -55,8 +55,8 @@ describe('API v1.0 Burgers', function(){
       .get(API)
       .set('Authorization', 'some_value')
       .end((err, res) => {
-        res.body.should.have.property('X-Egg').with.lengthOf(3)
-        chai.expect(res.body['X-Egg']).to.includes("Ovo", "Hambúrguer de carne", "Queijo")
+        res.body.should.have.property('X-Egg').with.property('ingredients').with.lengthOf(3)
+        chai.expect(res.body['X-Egg'].ingredients).to.includes("Ovo", "Hambúrguer de carne", "Queijo")
 
         done()
       })
@@ -67,8 +67,8 @@ describe('API v1.0 Burgers', function(){
       .get(API)
       .set('Authorization', 'some_value')
       .end((err, res) => {
-        res.body.should.have.property('X-Egg Bacon').with.lengthOf(4)
-        chai.expect(res.body['X-Egg Bacon']).to.includes("Ovo", "Bacon", "Hambúrguer de carne", "Queijo")
+        res.body.should.have.property('X-Egg Bacon').with.property('ingredients').with.lengthOf(4)
+        chai.expect(res.body['X-Egg Bacon'].ingredients).to.includes("Ovo", "Bacon", "Hambúrguer de carne", "Queijo")
 
         done()
       })
@@ -97,8 +97,8 @@ describe('API v1.0 Burgers', function(){
         res.body.should.be.a('object')
         Object.keys(res.body).should.have.lengthOf(5)
         chai.expect(res.body).to.include.all.keys(burgers)
-        chai.expect(res.body['X-Test']).to.includes("Ovo", "Hambúrguer de carne")
-        res.body['X-Test'].should.have.lengthOf(2)
+        chai.expect(res.body['X-Test'].ingredients).to.includes("Ovo", "Hambúrguer de carne")
+        res.body['X-Test'].ingredients.should.have.lengthOf(2)
       })
 
     done()
@@ -155,8 +155,8 @@ describe('API v1.0 Burgers', function(){
             res.body.should.be.a('object')
             Object.keys(res.body).should.have.lengthOf(5)
             chai.expect(res.body).to.include.all.keys(burgers)
-            chai.expect(res.body['X-Test']).to.includes("Bacon", "Ovo", "Hambúrguer de carne")
-            res.body['X-Test'].should.have.lengthOf(3)
+            chai.expect(res.body['X-Test'].ingredients).to.includes("Bacon", "Ovo", "Hambúrguer de carne")
+            res.body['X-Test'].ingredients.should.have.lengthOf(3)
           })
       })
     done()

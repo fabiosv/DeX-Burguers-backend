@@ -69,7 +69,7 @@ exports.calculate = (req, res, next) => {
   }
 
   if(burger.name in burgers_menu){
-    ingredientsList = burgers_menu[burger.name]
+    ingredientsList = burgers_menu[burger.name].ingredients
   }
 
   let price = getIngredientsPrice(ingredientsList)

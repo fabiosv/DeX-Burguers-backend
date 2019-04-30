@@ -26,7 +26,7 @@ exports.create = (req, res, next) => {
     return res.status(400).send(`[${notIngredint}] are not valid Ingredient`)
   }
 
-  burgers_menu[newBurger.name] = newBurger.ingredients
+  burgers_menu[newBurger.name] = {ingredients: newBurger.ingredients, image: ''}
   res.status(201).send("Burger created Successfully: \n" + JSON.stringify(newBurger))
 }
 
@@ -47,7 +47,7 @@ exports.update = (req, res, next) => {
     return res.status(400).send(`[${notIngredint}] are not valid Ingredient`)
   }
 
-  burgers_menu[burger.name] = burger.ingredients
+  burgers_menu[burger.name].ingredients = burger.ingredients
   return res.status(204).end()
 }
 
