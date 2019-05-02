@@ -4,6 +4,10 @@ const verifyParams = (ingredient) => {
   return typeof(ingredient.name) === "undefined" || typeof(ingredient.price) === "undefined"
 }
 
+const handleError = (res, status, errMsg) => {
+  return res.status(status).json({error: errMsg})
+}
+
 exports.getAll = (req, res, next) => {
   res.send(ingredients)
 }
@@ -12,46 +16,46 @@ exports.create = (req, res, next) => {
   const newIngredient = req.body
 
   if(verifyParams(newIngredient)) {
-    return res.status(400).send("Neither name or price was informed!")
+    return handleError(res, 400, "Neither name or price was informed!")
   }
 
   if(typeof(newIngredient.price) !== "number"){
-    return res.status(400).send("Price must be a number!")
+    return handleError(res, 400, "Price must be a number!")
   }
 
   if(newIngredient.price <= 0) {
-    return res.status(400).send("Price must be higher than zero!")
+    return handleError(res, 400, "Price must be higher than zero!")
   }
 
   if(newIngredient.name in ingredients){
-    return res.status(409).send("Ingredient already exists!")
+    return handleError(res, 409, "Ingredient already exists!")
   }
 
   ingredients[newIngredient.name] = newIngredient.price
 
-  res.status(201).send("Ingredient created Successfully: \n" + JSON.stringify(newIngredient))
+  res.status(201).json(newIngredient)
 }
 
 exports.update = (req, res, next) => {
   const ingredient = req.body
 
   if(verifyParams(ingredient)) {
-    return res.status(400).send("Neither name or price was informed!")
+    return handleError(res, 400, "Neither name or price was informed!")
   }
 
   if(typeof(ingredient.price) !== "number"){
-    return res.status(400).send("Price must be a number!")
+    return handleError(res, 400, "Price must be a number!")
   }
 
   if(ingredient.price <= 0) {
-    return res.status(400).send("Price must be higher than zero!")
+    return handleError(res, 400, "Price must be higher than zero!")
   }
 
   if(!(ingredient.name in ingredients)) {
-    return res.status(404).send("Ingredient Not Found!")
+    return handleError(res, 404, "Ingredient Not Found!")
   }
   ingredients[ingredient.name] = ingredient.price
-  return res.status(204).end()
+  return res.status(200).json(ingredient)
 }
 
 exports.delete = (req, res, next) => {
@@ -59,8 +63,8 @@ exports.delete = (req, res, next) => {
 
   if(typeof(ingredient.name) === "string" && ingredient.name in ingredients){
     delete ingredients[ingredient.name]
-    return res.send("Ingredient Deleted!")
+    return res.json({msg: "Ingredient Deleted!"})
   }
 
-  return res.status(404).send("Ingredient Not Found!")
+  return handleError(res, 404, "Ingredient Not Found!")
 }

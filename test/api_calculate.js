@@ -61,16 +61,10 @@ describe('API v1.0 Calculate', function(){
     let burger = {
       name: "X-Test"
     }
-    chai.request(server)
-      .post(API)
-      .set('Authorization', 'some_value')
-      .send(burger)
-      .end((err, res) => {
-        res.should.have.status(404)
-        res.text.should.be.a('string')
-        res.text.should.equal("Burger Not Found! Are you looking for a 'custom' burger?")
-        done()
-      })
+
+    validatePost(API, 404, "Burger Not Found! Are you looking for a 'custom' burger?", burger)
+
+    done()
   })
 
   it('/POST/calculate : verify "custom" price that contains non existent ingredients, should display 400', function(done){
@@ -78,16 +72,9 @@ describe('API v1.0 Calculate', function(){
       name: "custom",
       ingredients: ["Tomate", "Cebola", "Queijo", "Alface"]
     }
-    chai.request(server)
-      .post(API)
-      .set('Authorization', 'some_value')
-      .send(burger)
-      .end((err, res) => {
-        res.should.have.status(400)
-        res.text.should.be.a('string')
-        res.text.should.equal("[Tomate,Cebola] are not valid Ingredient")
-        done()
-      })
+    validatePost(API, 400, "[Tomate,Cebola] are not valid Ingredient", burger)
+
+    done()
   })
 
   it('/POST/calculate : validate params, should display 400', function(done){
@@ -104,13 +91,10 @@ describe('API v1.0 Calculate', function(){
   })
 
   it('/POST/calculate : update ingredient price and check burgers price', function(done){
-    validatePut('/api/v1.0/ingredients', 204, "", {name:"Queijo", price: 2.3})
-
-    validatePrice(API, {name: "X-Bacon"}, 7.3, 7.3)
-
-    validatePut('/api/v1.0/ingredients', 204, "", {name:"Queijo", price: 1.5})
-
-    done()
+    validatePut('/api/v1.0/ingredients', 200, "", { name: 'Queijo', price: 2.3 })
+      .then(validatePrice(API, {name: "X-Bacon"}, 7.3, 7.3))
+      .then(validatePut('/api/v1.0/ingredients', 200, "", { name: 'Queijo', price: 1.5 }))
+      .then(done())
   })
 
   it('/POST/calculate : verify "Light" promotion', function(done){
@@ -155,6 +139,25 @@ describe('API v1.0 Calculate', function(){
     validatePrice(API, {name: "custom", ingredients: [...promo2, ...promo1]}, 13.5, 9.0, ["Muita carne", "Muito queijo"])
 
     done()
+  })
+
+  it('/POST/calculate : verify if it calculate if zero ingredients are informed', function(done){
+    let burger = {name: "custom", ingredients: []}
+    chai.request(server)
+      .post(API)
+      .set('Authorization', 'some_value')
+      .send(burger)
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.body.should.be.a('object')
+          res.body.should.have.property('name').equal(burger.name)
+          res.body.should.have.property('originalPrice').equal(0)
+          res.body.should.have.property('promoPrice').equal(0)
+          res.body.should.have.property('promoPrice').equal(0)
+          res.body.should.have.property('promotions').with.lengthOf(0)
+
+        done()
+      })
   })
 
 })
