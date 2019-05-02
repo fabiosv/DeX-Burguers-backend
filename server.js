@@ -6,7 +6,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const config = require('./server/config')
 const path = require("path")
-const fs = require("fs")
 
 const app = express()
 
@@ -30,6 +29,7 @@ app.use(require('./secured').authorization)
 
 app.use('/api', require('./api'))
 
+// app.listen(3001, '0.0.0.0', () => {
 app.listen(config.port, () => {
   console.log('Server listening on port %s, Ctrl+C to stop', config.port)
 })
