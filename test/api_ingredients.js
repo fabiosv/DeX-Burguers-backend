@@ -4,6 +4,7 @@ const chaiHttp = require('chai-http')
 const should = chai.should()
 const validatePost = require('../helpers/validation_methods').validatePost
 const validatePut = require('../helpers/validation_methods').validatePut
+const validateDelete = require('../helpers/validation_methods').validateDelete
 
 const API = '/api/v1.0/ingredients'
 
@@ -38,8 +39,9 @@ describe('API v1.0 Ingredients', function(){
       .send(ingredient)
       .end((err, res) => {
         res.should.have.status(201)
-        res.text.should.be.a('string')
-        res.text.should.equal('Ingredient created Successfully: \n{"name":"Tomate","price":0.1}')
+        res.body.should.be.a('object')
+        res.body.should.have.property('name').equal(ingredient.name)
+        res.body.should.have.property('price').equal(ingredient.price)
         done()
       })
   })
@@ -90,19 +92,12 @@ describe('API v1.0 Ingredients', function(){
       name: "Alface",
       price: 0.10
     }
-    chai.request(server)
-      .post(API)
-      .set('Authorization', 'some_value')
-      .send(ingredient)
-      .end((err, res) => {
-        res.should.have.status(409)
-        res.text.should.be.a('string')
-        res.text.should.equal('Ingredient already exists!')
-        done()
-      })
+    validatePost(API, 409, 'Ingredient already exists!', ingredient)
+
+    done()
   })
 
-  it('/PUT/ingredients : try to update "Tomate" price, should display 204 and return "Tomate" with updated price on GET', function(done){
+  it('/PUT/ingredients : try to update "Tomate" price, should display 200 and return "Tomate" with updated price on GET', function(done){
     let ingredient = {
       name: "Tomate",
       price: 1.25
@@ -112,7 +107,7 @@ describe('API v1.0 Ingredients', function(){
       .set('Authorization', 'some_value')
       .send(ingredient)
       .end((err, res) => {
-        res.should.have.status(204)
+        res.should.have.status(200)
 
         chai.request(server)
           .get(API)
@@ -159,15 +154,15 @@ describe('API v1.0 Ingredients', function(){
     let ingredient = {
       name: "Tomate"
     }
-
     chai.request(server)
       .delete(API)
       .set('Authorization', 'some_value')
       .send(ingredient)
       .end((err, res) => {
         res.should.have.status(200)
-        res.text.should.be.a('string')
-        res.text.should.equal("Ingredient Deleted!")
+        res.body.should.be.a('object')
+        res.body.should.have.property('msg')
+        res.body.msg.should.equal("Ingredient Deleted!")
       })
 
     done()
@@ -177,16 +172,7 @@ describe('API v1.0 Ingredients', function(){
     let ingredient = {
       name: "Salame"
     }
-
-    chai.request(server)
-      .delete(API)
-      .set('Authorization', 'some_value')
-      .send(ingredient)
-      .end((err, res) => {
-        res.should.have.status(404)
-        res.text.should.be.a('string')
-        res.text.should.equal("Ingredient Not Found!")
-      })
+    validateDelete(API, 404, "Ingredient Not Found!", ingredient)
 
     done()
   })

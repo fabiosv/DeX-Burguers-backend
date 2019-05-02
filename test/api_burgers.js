@@ -4,6 +4,7 @@ const chaiHttp = require('chai-http')
 const should = chai.should()
 const validatePost = require('../helpers/validation_methods').validatePost
 const validatePut = require('../helpers/validation_methods').validatePut
+const validateDelete = require('../helpers/validation_methods').validateDelete
 
 const API = '/api/v1.0/burgers'
 chai.use(chaiHttp)
@@ -86,7 +87,10 @@ describe('API v1.0 Burgers', function(){
       .end((err, res) => {
         res.should.have.status(201)
         res.text.should.be.a('string')
-        res.text.should.equal('Burger created Successfully: \n{"name":"X-Test","ingredients":["Ovo","Hambúrguer de carne"]}')
+        console.log(res.body)
+        res.body.name.should.equal(burger.name)
+        chai.expect(res.body.ingredients).to.includes("Ovo","Hambúrguer de carne")
+        res.body.should.have.property('image')
       })
     chai.request(server)
       .get(API)
@@ -144,7 +148,7 @@ describe('API v1.0 Burgers', function(){
       .set('Authorization', 'some_value')
       .send(burger)
       .end((err, res) => {
-        res.should.have.status(204)
+        res.should.have.status(200)
 
         chai.request(server)
           .get(API)
@@ -204,7 +208,8 @@ describe('API v1.0 Burgers', function(){
       .end((err, res) => {
         res.should.have.status(200)
         res.text.should.be.a('string')
-        res.text.should.equal("Burger Deleted!")
+        res.body.should.have.property('msg')
+        res.body.msg.should.equal("Burger Deleted!")
       })
 
     chai.request(server)
@@ -226,15 +231,7 @@ describe('API v1.0 Burgers', function(){
       name: "X-Test"
     }
 
-    chai.request(server)
-      .delete(API)
-      .set('Authorization', 'some_value')
-      .send(burger)
-      .end((err, res) => {
-        res.should.have.status(404)
-        res.text.should.be.a('string')
-        res.text.should.equal("Burger Not Found!")
-      })
+    validateDelete(API, 404, "Burger Not Found!", burger)
 
     done()
   })
@@ -242,15 +239,7 @@ describe('API v1.0 Burgers', function(){
   it('/DELETE/burgers : try to delete burger without inform any params, should display 400 - "Please inform a name param! It must be a string"', function(done){
     let burger = {}
 
-    chai.request(server)
-      .delete(API)
-      .set('Authorization', 'some_value')
-      .send(burger)
-      .end((err, res) => {
-        res.should.have.status(400)
-        res.text.should.be.a('string')
-        res.text.should.equal("Please inform a name param! It must be a string")
-      })
+    validateDelete(API, 400, "Please inform a name param! It must be a string", burger)
 
     done()
   })

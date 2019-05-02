@@ -21,7 +21,7 @@ exports.upload = (req, res) => {
           if (err) return handleError(err, res);
           burgers_menu[req.file.originalname].image = `/${fileName}`
           return res.status(200).json({
-            msg: "File uploaded!", 
+            msg: "File uploaded!",
             burger: {
               ...burgers_menu[req.file.originalname],
               name: req.file.originalname

@@ -10,6 +10,10 @@ const paramsOK = (burger) => {
   }
 }
 
+const handleError = (res, status, errMsg) => {
+  return res.status(status).json({error: errMsg})
+}
+
 const getIngredientsPrice = (ingredientsList) => {
   return ingredientsList.map((ingr) => ingredients[ingr]).reduce((total, num) => total + num)
 }
@@ -51,18 +55,18 @@ exports.calculate = (req, res, next) => {
   const burger = req.body
   let ingredientsList = []
   if(!paramsOK(burger)) {
-    return res.status(400).send("Neither name or ingredients was correct! Name must be a string and if 'custom' then ingredients must be an array.")
+    return handleError(res, 400, "Neither name or ingredients was correct! Name must be a string and if 'custom' then ingredients must be an array.")
   }
 
   if(!(burger.name in burgers_menu) && burger.name !== "custom") {
-    return res.status(404).send("Burger Not Found! Are you looking for a 'custom' burger?")
+    return handleError(res, 404, "Burger Not Found! Are you looking for a 'custom' burger?")
   }
 
   if(burger.name === "custom") {
     let notIngredint = burger.ingredients.filter((ing) => !(ing in ingredients))
 
     if(notIngredint.length > 0) {
-      return res.status(400).send(`[${notIngredint}] are not valid Ingredient`)
+      return handleError(res, 400, `[${notIngredint}] are not valid Ingredient`)
     }
 
     ingredientsList = burger.ingredients
@@ -70,6 +74,15 @@ exports.calculate = (req, res, next) => {
 
   if(burger.name in burgers_menu){
     ingredientsList = burgers_menu[burger.name].ingredients
+  }
+
+  if(ingredientsList.length === 0) {
+    return res.status(200).json({
+      name: burger.name,
+      originalPrice: 0,
+      promoPrice: 0,
+      promotions: []
+    })
   }
 
   let price = getIngredientsPrice(ingredientsList)
