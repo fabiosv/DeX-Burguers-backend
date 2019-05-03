@@ -9,11 +9,11 @@ exports.ingredients = {
 exports.burgers_menu = {
   "X-Bacon":	{
     ingredients: ["Bacon", "Hambúrguer de carne", "Queijo"],
-    image: '/public/images/x-bacon.jpg'
+    image: '/public/images/x-bacon.png'
   },
   "X-Burger":	{
     ingredients: ["Hambúrguer de carne", "Queijo"],
-    image: '/public/images/x-burguer.png'
+    image: '/public/images/x-burger.png'
   },
   "X-Egg": {
     ingredients: ["Ovo", "Hambúrguer de carne", "Queijo"],
