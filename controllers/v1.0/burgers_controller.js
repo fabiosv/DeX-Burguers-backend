@@ -1,5 +1,8 @@
-const burgers_menu = require('../../data/preData').burgers_menu
+// const burgers_menu = require('../../data/preData').burgers_menu
+const burgers_menu = require('../../data/burgers')
 const ingredients = require('../../data/preData').ingredients
+
+const burgerServices = require('../../services/burgerServices')
 
 const paramsOK = (burger) => {
   return typeof(burger.name) === "string" && Array.isArray(burger.ingredients)
@@ -10,7 +13,13 @@ const handleError = (res, status, errMsg) => {
 }
 
 exports.getAll = (req, res, next) => {
-  res.send(burgers_menu)
+  burgerServices.getAll().then(
+    (burgers) => res.send(burgers),
+    (error) => {
+        console.error(error)
+        handleError(res, 500, 'There was an error.')
+    }
+)
 }
 
 exports.create = (req, res, next) => {
