@@ -26,7 +26,7 @@ app.get("/public/images/:name", (req, res) => {
   return res.sendFile(path.join(__dirname, `./public/images/${req.params.name}`));
 })
 
-app.use(require('./secured').authorization)
+app.use(require('./server/secured').authorization)
 
 app.use('/api', require('./api'))
 
